@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JS Bin</title>
+<style type="text/css">
+  .wrap{
+    list-style: none;
+    margin:0 auto;
+    width:800px;
+  }  
+  .wrap li{
+    border:1px solid #ccc;
+    float:left;
+    width:220px;
+    height:400px;
+    margin:10px;
+  }
+  .wrap li img{
+    width:220px;
+    height:400px;
+  }
+
+
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script>
+  $(function(){
+    var clear;
+    if(clear){
+      clearTimeout(clear);
+    }
+    $(window).on('scroll',function(){
+        clear=setTimeout(function(){
+          check();
+        },500)
+          
+  
+        }
+
+    );
+
+    check();
+   
+    function check(){
+
+            $('.wrap img').each(function(){
+              var $this=$(this);
+              if($this.attr('isLoaded')){
+                return;
+              }
+              if(isShow($this)){
+                addAttr($this);
+              }
+        })
+    }
+
+
+        function isShow($ele){
+            var $winHigh=$(window).height(),
+                $winScroll=$(window).scrollTop(),
+                $offset=$ele.offset().top;
+
+            if($offset<$winHigh+$winScroll){
+                return true;
+            }else{
+                return false;
+            }
+        }
+
+        function addAttr($ele){
+                $ele.attr('src',$ele.attr('data-src'));
+                $ele.attr('isLoaded',true);
+        }
+
+  
+
+
+
+
+
+  })
+</script>	
+</head>
+<body>
+    <ul class="wrap">
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+      <li><a href="#"><img src="loading.jpg" data-src="girl.jpg"></a></li>
+    </ul>
+</body>
+</html><!--

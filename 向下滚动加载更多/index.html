@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JS Bin</title>
+  <style type="text/css">
+      body{
+      }
+      ul{
+        list-style: none;
+      }
+      li{
+        border:1px solid blue;
+        border-radius: 5px;
+        margin-top:10px;
+        height:50px;
+      }
+      #btn{
+        display:block;
+        width:500px;
+        text-align: center;
+        border:2px dotted red;
+        font-size:35px;
+        margin:0 auto;
+      }
+  </style>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script>
+  		$(function(){
+          var cur=3;
+          var locked=true;
+          
+             
+          
+          $('#wrap').on('mouseover','li',function(){
+            $(this).css('background','green');
+          }).on('mouseout','li',function(){
+            $(this).css('background','');
+          })
+
+
+          load();
+          
+          function check($node){
+              console.log($node);
+              var winH=$(window).height(),
+                  offset=$node.offset().top,
+                   winSt=$(window).scrollTop();
+              if(offset<winH+winSt){
+                return true;
+          }return false;
+        }
+
+          function load(){
+
+               $.ajax({
+                        url:'getmore.php',
+                        type:'GET',
+                        dataType:'json',
+                        data:{
+                          start:cur,
+                          len:10
+                        },
+                        success:function(json){//已经JSON.parse解析完成
+                          if(json&&json.status===1){
+                                var item=json.data;
+                                for(var i=0;i<item.length;i++){
+                                $('#wrap').append('<li>'+item[i]+'</li>')
+                                }
+                                cur+=10;
+                          }else{
+                                alert('出错了');
+                          }
+                     },
+                
+                error:function(){//端网或者服务器出问题了
+                  alert('error')
+                },
+                complete:function(){
+                  locked=true;
+                  $('#btn').text('向下滚动加载更多')
+                }
+              })
+
+
+          }
+
+          var clock;
+          $(window).on('scroll',function(){
+                 
+          if(clock) clearTimeout(clock);
+          clock = setTimeout(function(){
+            if(!check($('#btn'))) return; 
+            load();
+          }, 1000);
+
+
+          //录制个gif为什么滚轮一直向下混动会执行？不是应该滚轮一直滚动会停下来吗？
+
+                  //if(check($('#btn'))){load()}
+              
+
+              // if(!locked){
+              //   return;
+              // }
+              // locked=false;
+              // $(this).text('加载中');
+
+          })
+      })
+
+  </script>	
+
+</head>
+
+<body>
+    <ul id="wrap">
+      <li>内容1</li>
+      <li>内容2</li>
+      <li>内容3</li>
+    </ul>
+    <a id="btn">向下滚动下载更多</a>
+</body>
+</html><!--

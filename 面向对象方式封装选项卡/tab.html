@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JS Bin</title>
+<style type="text/css">
+   html,body,ul{
+    margin:0;
+    padding:0; 
+   }
+   body{
+    margin-top: 50px;
+  }
+   .wrap{
+    list-style: none;
+    width:400px;
+   }
+   .wrap li{
+    width:50px;
+    text-align: center;
+    padding:10px;
+    border:1px solid red;
+    float:left;
+   }
+   .wrap li:hover{
+    cursor: pointer;
+   }
+   .clear:after{
+    display:block;
+    clear:both;
+    content:'';
+   }
+   .onchange{
+    background:red;
+   }
+   .tab div {
+    display:none;
+    border:1px solid #ccc;
+    width:285px;
+    height:200px;
+   }
+
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+
+  function Tab(tab){
+  this.tab=tab;
+  this.change();
+}
+
+Tab.prototype.change=function(){
+  var _this=this;
+  this.tab.find('li').on('click',function(){
+    $index=$(this).index();
+    $(this).addClass('onchange').siblings().removeClass('onchange');
+    _this.tab.find('div').css('display','none');
+    _this.tab.find('div').eq($index).css('display','block');
+  })
+}
+
+new Tab($('.tab').eq(0));
+new Tab($('.tab').eq(1));
+})
+
+
+
+
+
+  // $(function(){
+  //     $('.tab').find('li').on('click',function(){
+  //       $index=$(this).index();
+  //       $(this).addClass('onchange').siblings().removeClass('onchange')
+  //       $('.tab').find('div').css('display','none');
+  //       $('.tab').find('div').eq($index).css('display','block');
+  //     })  
+  // })
+</script>
+</head>
+
+<body>
+  <div class="tab">
+    <ul class="wrap clear">
+      <li class="onchange">1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+    </ul>
+    <div style="display:block">这是内容1</div>
+    <div>这是内容2</div>
+    <div>这是内容3</div>
+    <div>这是内容4</div> 
+  </div>
+  <div class="tab">
+    <ul class="wrap clear">
+      <li class="onchange">1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+    </ul>
+    <div style="display:block">这是内容1</div>
+    <div>这是内容2</div>
+    <div>这是内容3</div>
+    <div>这是内容4</div> 
+  </div>
+</body>
+</html><!--
