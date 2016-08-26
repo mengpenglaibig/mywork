@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>JS Bin</title>
+<style type="text/css">
+ul,li{
+  padding:0;
+}
+.wrap{
+  width:880px;
+  margin:0 auto;
+
+}
+.pic-ct{
+  list-style:none;
+  position:relative;
+}
+.item{
+  position: absolute;
+  padding:10px;
+  border:1px solid #ccc;
+  width:250px;
+  margin:10px;
+  box-shadow: 1px 1px 1px #ccc;
+}
+.item img{
+  width:250px;
+  margin:0 auto;
+}
+.item .title{
+  height:25px;
+  margin:0 12px;
+  border-bottom: 1px solid #ccc;
+}
+.item .ditail{
+  font-size: 15px;
+  line-height: 1.8;
+  margin:10px 15px 0;
+  color:black;
+}
+#load{
+  width:700px;
+  margin:0 auto;
+  background: #fff;
+  text-align: center;
+
+}
+.clear:after{
+  content: '';
+  clear:both;
+  display:block;
+}
+</style>
+<script type="text/javascript" src="jquery.js"></script>
+
+
+</head>
+
+<body>
+<div class="wrap">
+    <ul class="pic-ct">
+     <!--  <li class="item">
+        <a href="#">
+          <img src="http://www.sinaimg.cn/dy/slidenews/5_t160/2016_32/453_80228_366563.jpg">
+        </a>
+        <h4 class="title">这是一只勇猛的狮子</h4>
+        <p class="ditail">这是一只勇猛的狮子这是一只勇猛的狮子这是一只勇猛的狮子这是一只勇猛的狮子这是一只勇猛的狮子</p>
+      </li> -->
+    </ul>
+</div>
+ <div id="load">
+   <img src="load.jpg">
+ </div>
+
+
+
+ <script>
+ //看到load
+ //获取page=1的10条数据
+ //把10条数据拼装成dom
+ //用瀑布流拜访
+ //当lead出现在眼前的时候
+ //获取page=2的10条数据
+
+var exposure={
+
+
+      init:function($el){
+            this.$el=$el,
+            _this=this;
+            this.checkShow();
+            this.perPageCount=10,
+            this.nowPage=0,
+            this.cumHeight=[];
+            var clock;
+        $(window).on('scroll',function(){
+            
+            if(clock){
+              clearTimeout(clock);
+            }
+
+            clock=setTimeout(function(){
+
+                 _this.checkShow();
+
+            },300)
+        })  
+      },
+
+      checkShow:function(){
+
+            if(this.isShow()){
+               this.getAjax();
+            }
+      },
+
+      isShow:function(){
+
+        var winH=$(window).height(),
+            winScroll=$(window).scrollTop(),
+            itemT=this.$el.offset().top;
+        if(itemT<winH+winScroll){
+          return true;
+        }else{
+          return false;
+        }
+      },
+
+      getAjax:function(){
+        
+            _this=this;
+
+        $.ajax({
+          url:'http://platform.sina.com.cn/slide/album_tech',
+          dataType:'jsonp',
+          jsonp:'jsoncallback',
+          data:{
+            app_key:'1271687855',
+            num:_this.perPageCount,
+            page:_this.nowPage
+          },
+          
+          success:function(ret){
+            if(status==0){
+               _this.place(ret.data);
+               _this.nowPage++;
+            }
+          }
+        })
+      },
+      
+      place:function(nodeList){
+        var $nodes=this.createNode(nodeList);
+        this.weaterFallPlace($nodes);
+           
+      },
+      
+      createNode:function(item){
+
+            var tpl='';
+            for(var i=0;i<item.length;i++){
+              tpl+='<li class="item">';
+              tpl+='<a href="'+item[i].url+'" class="link"><img src="'+item[i].img_url+'"></a>';
+              tpl+='<h4 class="title">'+item[i].short_name+'</h4>';
+              tpl+='<p class="detail">'+item[i].short_intro+'</p>';
+              tpl+='</li>';
+            };
+            $nodes=$(tpl);
+            $('.pic-ct').append($nodes);
+            return $nodes;
+      },
+
+      weaterFallPlace:function($nodes){
+              
+                  _this=this;
+                  itemW=$('.item').outerWidth(true),
+                  colNum=parseInt($('.pic-ct').width()/itemW);
+                
+                    if(this.cumHeight.length==0){
+                      for(var i=0;i<colNum;i++){
+                        this.cumHeight.push(0);
+                      }
+                      console.log(this.cumHeight)
+                    }
+                    
+                    $nodes.each(function(){
+                      var $cur=$(this);
+                      $cur.find('img').on('load',function(){
+                                var idx=0,
+                                minHeight=_this.cumHeight[0];
+                            
+                            for(var i=0;i<_this.cumHeight.length;i++){
+                            if(_this.cumHeight[i]<minHeight){
+                              idx=i;
+                              minHeight=_this.cumHeight[i];
+                      }
+                    }
+
+                      $cur.css({
+                      left:itemW*idx,
+                      top:minHeight
+                    })
+
+                      _this.cumHeight[idx]=$cur.outerHeight(true)+_this.cumHeight[idx];
+                      $('.wrap').height(Math.max.apply(null,_this.cumHeight));
+
+                      })
+                    })
+                    
+                    
+
+                    
+
+             
+      }
+}
+exposure.init($('#load'));
+
+</script> 
+</body>
+</html>
